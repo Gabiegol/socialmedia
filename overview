@@ -1,0 +1,64 @@
+class User:
+    def __init__(self, user_id, username):
+        self.user_id = user_id
+        self.username = username
+        self.posts = []  # Initialize an empty list to store the user's posts
+
+    def create_post(self, content):
+        # Create a new post and associate it with the current user
+        post = Post(content, self)
+        self.posts.append(post)  # Add the post to the user's list of posts
+        return post
+
+    def like_post(self, post):
+        post.add_like(self)  # Add the user to the list of users who liked the post
+
+    def comment_on_post(self, post, comment_content):
+        post.add_comment(self, comment_content)  # Add a comment to the post
+
+
+class Post:
+    def __init__(self, content, author):
+        self.post_id = None  # You can generate a unique post ID here
+        self.content = content
+        self.author = author
+        self.likes = []  # Initialize an empty list to store users who liked the post
+        self.comments = []  # Initialize an empty list to store comments on the post
+
+    def add_like(self, user):
+        self.likes.append(user)  # Add a user to the list of users who liked the post
+
+    def add_comment(self, user, comment_content):
+        comment = Comment(user, comment_content)  # Create a new comment
+        self.comments.append(comment)  # Add the comment to the list of comments
+
+
+class Comment:
+    def __init__(self, user, content):
+        self.comment_id = None  # You can generate a unique comment ID here
+        self.user = user
+        self.content = content
+
+
+# Example usage:
+
+# Creating users
+user1 = User(1, "Mr Temi")
+user2 = User(2, "Miss Mary")
+
+# User 1 creates a post
+post1 = user1.create_post("This is my first post!")
+
+# User 2 likes the post
+user2.like_post(post1)
+
+# User 2 comments on the post
+user2.comment_on_post(post1, "Weldone Temi! Nice post")
+
+# Printing post details
+print(f"Post Content: {post1.content}")
+print(f"Author: {post1.author.username}")
+print(f"Likes: {len(post1.likes)}")
+print("Comments:")
+for comment in post1.comments:
+    print(f"{comment.user.username}: {comment.content}")
